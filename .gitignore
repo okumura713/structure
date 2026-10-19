@@ -1,0 +1,3 @@
+__pycache__/
+*.pyc
+01_sim/151000/fem_*.npz

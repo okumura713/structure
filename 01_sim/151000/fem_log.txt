@@ -1,0 +1,15 @@
+hole A: faces L=1858 R=1811
+hole P: faces L=3066 R=3063
+bore fixed nodes 20596 X range 133.99999999997635 232.99999999997647
+K assembled (1565376, 1565376) nnz=123293034 45.5s
+stress operator ok 39500
+fork_first
+  solve 163 frames: 117.2s
+  反力チェック |pipe reaction - F_O|max = 0.00 N
+  最大ミーゼス 506.5 MPa  t=0.301s  位置 [225.  -32.8 173.8]  材料 側板
+  静的(t=0) 最大 223.5 MPa
+drive_first
+  solve 180 frames: 82.3s
+  反力チェック |pipe reaction - F_O|max = 0.00 N
+  最大ミーゼス 703.3 MPa  t=1.622s  位置 [225.  -32.8 173.8]  材料 側板
+  静的(t=0) 最大 223.5 MPa
