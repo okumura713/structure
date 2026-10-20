@@ -74,7 +74,7 @@ class View:
 # ---------------- 車両 側面図 ----------------
 mm = 1e3
 Gc = L['Gc'] * mm; xs = L['x']; tL = L['t']; ys = float(L['ys']) * mm; dirn = int(L['d'])
-H_STEP = 6.0
+H_STEP = float(L['h_step'])
 def state(t):
     return np.array([np.interp(t, tL, xs[:, j]) for j in range(xs.shape[1])])
 def to_world(p, s):
@@ -103,7 +103,7 @@ class Side:
         ax.set_xticks([]); ax.set_yticks([])
         ax.add_patch(Polygon(ground_xy(xlim[0] - 3000, xlim[1] + 3000), fc='#cfc8b8', ec='#555', lw=1.2, zorder=1))
         if follow:
-            ax.annotate('段差 6mm', (ys, H_STEP), (ys, -35), ha='center', fontsize=8, color='#a00',
+            ax.annotate(f'段差 {H_STEP:g}mm', (ys, H_STEP), (ys, -35), ha='center', fontsize=8, color='#a00',
                         arrowprops=dict(arrowstyle='->', color='#a00'), zorder=8)
         self.p = {}
         for k, fc in (('unit', '#9aa5b1'), ('mast', '#b8c2cc'), ('pallet', '#c8a26b'), ('goods', '#e8d9b0')):
@@ -143,7 +143,7 @@ class Side:
 cmap = matplotlib.colormaps['jet']
 norm = colors.Normalize(0, vmax_case)
 fig = plt.figure(figsize=(16, 9), dpi=100)
-fig.suptitle(f'151000-01 ホイールフォークペア　段差6mm乗り越え時の応力（ミーゼス）  ― {CASE_JP[case]}', fontsize=14, y=0.985)
+fig.suptitle(f'151000-01 ホイールフォークペア　段差{H_STEP:g}mm乗り越え時の応力（ミーゼス）  ― {CASE_JP[case]}', fontsize=14, y=0.985)
 ax1 = fig.add_axes([0.0, 0.33, 0.29, 0.60]); ax2 = fig.add_axes([0.27, 0.33, 0.29, 0.60])
 v1 = View(ax1, -20, 25, '外側から（右側板）')
 v2 = View(ax2, 200, 25, '最大応力部の拡大（プッシュロッド穴, 内側・後方から）', zoom=38)
@@ -157,7 +157,7 @@ side = Side(axs, (-1520, 420), (-60, 1260), follow=True)
 axs.set_title('車両側面（荷物1500kg・55m/min）', fontsize=10)
 axz = fig.add_axes([0.575, 0.33, 0.415, 0.25])
 zoom = Side(axz, (ys - 340, ys + 340), (-12, 220), zoom=True)
-axz.set_title('段差まわり拡大（段差 6mm）', fontsize=10)
+axz.set_title(f'段差まわり拡大（段差 {H_STEP:g}mm）', fontsize=10)
 axh = fig.add_axes([0.06, 0.06, 0.92, 0.17])
 vm_hist = VM.max(0)
 axh.plot(tF, vm_hist, color='#c0392b', lw=1.8, label='151000-01 最大ミーゼス [MPa]')

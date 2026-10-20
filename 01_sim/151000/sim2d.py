@@ -8,7 +8,7 @@
   - 接地: 駆動輪 R75 (1輪, 中央), 従動ローラー R32.5 x 2 (ピッチ90) x 左右2セット
   - 接触力: Hunt-Crossley  F = K δ^1.5 (1 + α δ')  （ウレタン車輪相当）
   - 駆動輪は速度制御（55 m/min を保つよう牽引、ただし |Ft| ≤ μN）
-  - 段差: 高さ 6 mm の直角段差（角部は鋭角）
+  - 段差: 高さ h_step [mm] の直角段差（角部は鋭角）。2026-10-20 に 6 mm → 3 mm へ変更（6 mm は実使用より厳しすぎた）
 出力: 151000-01（片側）にかかる 3ピン荷重の時刻歴 → loads_<case>.npz
 座標: Y = 車体前後(+Y がフォーク先端側), Z = 鉛直上向き, 原点はSTEPモデル原点。単位 SI
 """
@@ -47,7 +47,7 @@ PAR = dict(
     zeta_fork=0.05,           # フォーク/パレット/荷物 系の減衰比（車体等価質量基準）
     mu=0.6,                   # 駆動輪-床 摩擦係数
     v0=55.0 / 60.0,           # 走行速度 [m/s]
-    h_step=6.0,               # 段差 [mm]
+    h_step=3.0,               # 段差 [mm]（初版は 6.0）
     tau_v=0.1,                # 速度制御 時定数 [s]
 )
 
@@ -192,7 +192,7 @@ def run(case, par=PAR, save=True):
     Tpr = -cr(A - O, FAb) / cr(P - O, e)           # プッシュロッド軸力（+引張）
     FP = Tpr[:, None] * e[None, :]
     FO = -(FAb + FP)
-    rec.update(FAb=FAb, FP=FP, FO=FO, Tpr=Tpr, ys=ys, d=d, Gc=S['Gc'], M=S['M'], I=S['I'], cL=S['cL'],
+    rec.update(FAb=FAb, FP=FP, FO=FO, Tpr=Tpr, ys=ys, d=d, h_step=par['h_step'], Gc=S['Gc'], M=S['M'], I=S['I'], cL=S['cL'],
                k_fork=-1.0 if par['k_fork'] is None else par['k_fork'])
     if save: np.savez(HERE / f'loads_{case}.npz', **{k: np.asarray(v) for k, v in rec.items()})
     st = FAb[0]
